@@ -35,34 +35,31 @@ blog/
 > escrita al final**. Si la omites, git te crea `blog-api-ai4devs` y a partir de ahí no encaja
 > nada.
 
-### Forkea y clona los tres
+### Forkea los tres, y monta este
 
 Forkea los tres repositorios con el botón **Fork** de cada uno. Hace falta: sobre un clon
 directo no tienes permiso de escritura, y aquí vas a crear una rama y commitear.
 
 > 🚨 **En el formulario del fork, DESMARCA la casilla que dice copiar solo la rama por
-> defecto.** Viene marcada, y si la dejas así tu fork se lleva únicamente `main`: la rama de
-> partida de este módulo no llega.
+> defecto.** Viene marcada, y si la dejas así tu fork se lleva únicamente `main`. Da igual
+> cómo la dejaras: las dos líneas de `upstream` de abajo traen la rama de partida del
+> repositorio del curso, así que funcionan en los dos casos.
+
+**Los tres se montan de uno en uno, y `blog-ai` va primero** porque los otros dos dependen de
+él. Cada `make up` se queda ocupando su terminal, así que abre una nueva para cada
+repositorio. Desde la carpeta que los va a contener (`mkdir blog && cd blog`), este es el
+tuyo:
 
 ```bash
-mkdir blog && cd blog
 git clone git@github.com:<tu-usuario>/blog-api-ai4devs.git blog-api
-git clone git@github.com:<tu-usuario>/blog-ai-ai4devs.git blog-ai
-git clone git@github.com:<tu-usuario>/blog-web-ai4devs.git blog-web
-
-# la rama de partida se trae del repositorio del curso, no del fork:
-# así funciona tanto si desmarcaste la casilla como si no
-for r in blog-api blog-ai blog-web; do
-  cd $r
-  git remote add upstream git@github.com:LIDR-academy/$r-ai4devs.git
-  git fetch upstream
-  git checkout -b s7/start upstream/s7/start
-  cd ..
-done
+cd blog-api
+git remote add upstream git@github.com:LIDR-academy/blog-api-ai4devs.git
+git fetch upstream
+git checkout -b s7/start upstream/s7/start
 ```
 
-`blog-web` es el único de los tres que puedes dejar sin levantar: sirve para ver el sistema
-entero funcionando, pero el ejercicio no lo toca.
+`blog-ai` y `blog-web` se montan igual, cambiando el nombre en las cinco líneas. El orden
+completo y las comprobaciones de cada uno están más abajo, en *Levantar el sistema entero*.
 
 > 📌 Si te sale `Permission denied (publickey)`, es SSH y no el fork. La guía oficial está en
 > `docs.github.com/es/authentication/connecting-to-github-with-ssh`.
