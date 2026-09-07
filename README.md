@@ -5,7 +5,7 @@ etiquetas y comentarios viven aquí, en SQLite, y ningún otro repositorio toca 
 
 Stack: **AdonisJS 6 + Lucid + SQLite**. Puerto **3402**.
 
-Este es uno de los tres repositorios sobre los que trabajas en el Módulo 7. Léelo entero antes
+Este es uno de los tres repositorios sobre los que trabajas en el Módulo 7, en la lección **«Ejercicio Blog Polirepo»**. Léelo entero antes
 de empezar: además de cómo levantarlo, aquí está **el ejercicio y cómo se entrega**.
 
 ## El sistema son tres repositorios
@@ -40,11 +40,25 @@ blog/
 Forkea los tres repositorios con el botón **Fork** de cada uno. Hace falta: sobre un clon
 directo no tienes permiso de escritura, y aquí vas a crear una rama y commitear.
 
+> 🚨 **En el formulario del fork, DESMARCA la casilla que dice copiar solo la rama por
+> defecto.** Viene marcada, y si la dejas así tu fork se lleva únicamente `main`: la rama de
+> partida de este módulo no llega.
+
 ```bash
 mkdir blog && cd blog
 git clone git@github.com:<tu-usuario>/blog-api-ai4devs.git blog-api
 git clone git@github.com:<tu-usuario>/blog-ai-ai4devs.git blog-ai
 git clone git@github.com:<tu-usuario>/blog-web-ai4devs.git blog-web
+
+# la rama de partida se trae del repositorio del curso, no del fork:
+# así funciona tanto si desmarcaste la casilla como si no
+for r in blog-api blog-ai blog-web; do
+  cd $r
+  git remote add upstream git@github.com:LIDR-academy/$r-ai4devs.git
+  git fetch upstream
+  git checkout -b s7/start upstream/s7/start
+  cd ..
+done
 ```
 
 `blog-web` es el único de los tres que puedes dejar sin levantar: sirve para ver el sistema
@@ -56,18 +70,32 @@ entero funcionando, pero el ejercicio no lo toca.
 ## Cómo se levanta este repositorio
 
 ```bash
-npm install
-cp .env.example .env
-node ace generate:key         # rellena APP_KEY, que .env.example deja vacía
-mkdir -p tmp                  # ver el aviso de abajo
-node ace migration:run
-node ace db:seed              # 8 posts publicados + 2 borradores, 3 autores, comentarios
-node ace serve                # http://localhost:3402
+make setup    # solo la primera vez: instala, crea el .env y prepara la base de datos
+make up       # arranca la API en http://localhost:3402
 ```
 
-> ⚠️ **`mkdir -p tmp` no es opcional en un clon limpio.** `tmp/` está en el `.gitignore`, así
-> que no viene en el clon, y sin esa carpeta `node ace migration:run` muere con *"Cannot open
-> database because the directory does not exist"*. El error no dice que falte una carpeta.
+Antes de tocar nada, `make setup` comprueba que la carpeta se llama `blog-api` y que tu Node
+es 20 o superior. Si falta algo, el mensaje dice **qué** falta y **cómo** resolverlo, en vez
+de reventar veinte comandos más adelante. Los tres repositorios traen los mismos atajos:
+`make check`, `make setup` y `make up`, más `make ayuda` para ver la lista.
+
+<details>
+<summary>Qué hace <code>make setup</code> por dentro, si prefieres ir a mano</summary>
+
+```bash
+npm ci                        # instala exactamente lo que fija package-lock.json
+cp .env.example .env
+node ace generate:key         # rellena APP_KEY, que .env.example deja vacía
+mkdir -p tmp                  # tmp/ está en el .gitignore, así que no viene en el clon
+node ace migration:run
+node ace db:seed              # 8 posts publicados + 2 borradores, 3 autores, comentarios
+```
+
+Dos detalles que el atajo te ahorra. Sin `mkdir -p tmp`, `node ace migration:run` muere con
+*"Cannot open database because the directory does not exist"*, y el error no dice que falte
+una carpeta. Y es `npm ci`, no `npm install`: `ci` instala exactamente las versiones fijadas
+y **no reescribe** `package-lock.json`, así que el repositorio se queda limpio.
+</details>
 
 Comprobación rápida:
 
@@ -80,12 +108,14 @@ curl -s 'localhost:3402/posts?por_pagina=3' | jq '.meta'
 
 Cada pieza depende de la anterior, así que el orden no es una preferencia:
 
-1. **Ollama**, con los dos modelos descargados (`ollama pull nomic-embed-text` y
-   `ollama pull qwen2.5:3b-instruct`).
-2. **`docker compose up -d`** dentro de `blog-ai`: PostgreSQL con pgvector, puerto **5433**.
-3. **`blog-ai`** en el 8402.
-4. **`blog-api`** en el 3402.
-5. **`blog-web`** en el 5402.
+1. **Ollama arrancado.** Sus dos modelos los descarga el `make setup` de `blog-ai`, así que
+   no tienes que buscarlos.
+2. **`blog-ai`** en el **8402**: `make setup` la primera vez, que levanta de paso PostgreSQL
+   con pgvector en el **5433** y espera a que acepte conexiones; después `make up`.
+3. **`blog-api`** en el **3402**: `make setup` la primera vez, después `make up`.
+4. **`blog-web`** en el **5402**: `make setup` la primera vez, después `make up`.
+
+Son tres terminales, una por repositorio, porque cada `make up` se queda ocupando la suya.
 
 Y **después el indexado**, que es el paso que se olvida. Sin él la búsqueda devuelve lista
 vacía:
@@ -94,8 +124,8 @@ vacía:
 curl -s -X POST localhost:3402/indexar | jq
 ```
 
-Los pasos 1, 2 y 3 están explicados en el `README.md` de `blog-ai`, que además tiene el aviso
-de la versión de Python.
+El `README.md` de `blog-ai` explica su parte con detalle, incluida la versión de Python que
+hace falta.
 
 ## Rutas
 
