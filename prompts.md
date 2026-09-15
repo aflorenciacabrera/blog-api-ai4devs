@@ -7,29 +7,63 @@ Esto no es papeleo. Lo que se revisa es **cómo pediste las cosas**, no solo lo 
 resultado flojo con un prompt bueno y un resultado flojo con un prompt vago necesitan feedback
 distinto, y sin este archivo no se distinguen.
 
-## Cómo rellenarlo
-
-- Un apartado `## Prompt N` por cada prompt.
-- **Pega el prompt tal cual lo lanzaste**, dentro del bloque de código, aunque ocupe diez líneas
-  y aunque tenga faltas. No lo reescribas para que quede bien: el que arreglaste mentalmente
-  después no es el que lanzaste.
-- Incluye también los que **no funcionaron**. Suelen ser los más útiles de leer.
-- `Modelo` y `Herramienta` en todos. Si cambiaste de una a otra a mitad, se nota aquí.
-
-Borra el ejemplo de abajo cuando escribas el primero.
-
 ---
 
 ## Prompt 1
 
-**Modelo:** Opus 1M xHigh
-**Herramienta:** Claude Code
+**Modelo:** Sonnet 5 (high effort)
+**Herramienta:** Claude Code (v2.1.265), sesión en `blog-api`
 
 ```
-Este es el ejemplo. Bórralo.
-
-El prompt va aquí dentro, entero y con sus saltos de línea,
-para que se sepa dónde empieza y dónde acaba.
+Aplicar esta regla: Toda función nueva de un endpoint HTTP (handler/ruta o el método del controlador que atiende esa ruta) lleva como primera línea interna el comentario exacto // contract-ready (o # contract-ready en Python).
 ```
 
-**Qué salió:** (opcional, una línea) funcionó a la primera / tuve que insistir / me inventó una ruta que no existe.
+**Qué salió:** no tocó el código; la búsqueda de `contract-ready` dio cero. Login caducado a mitad.
+
+## Prompt 2
+
+**Modelo:** Sonnet 5 (high effort)
+**Herramienta:** Claude Code, sesión en `blog-api`
+
+```
+Regla de proceso (obligatoria, comprobable):
+Toda función nueva de un endpoint HTTP (handler/ruta o el método del controlador que atiende esa ruta) lleva como primera línea interna el comentario exacto // contract-ready (o # contract-ready en Python).
+
+Haz exactamente esto:
+
+1. Persiste la regla en este repositorio: crea .cursor/rules/contract-ready.mdc con alwaysApply: true y el texto de la regla. Si en esta herramienta no aplica .cursor, créala también en CLAUDE.md en la raíz, con el mismo texto.
+
+2. Encargo pequeño que toque los dos repos:
+   - En ../blog-ai añade GET /resumen-indice que devuelva cuántos fragmentos hay indexados.
+   - En este blog-api añade un endpoint que lo consuma (por ejemplo GET /resumen-indice) y delegue en blog-ai.
+
+3. En toda función nueva de endpoint que escribas, la primera línea interna tiene que ser // contract-ready o # contract-ready.
+
+No hace falta tests ni dejar los servicios levantados. Prioriza cumplir la regla en el código nuevo.
+```
+
+**Qué salió:** funcionó: regla persistida y handlers con el comentario.
+
+## Prompt 3
+
+**Modelo:** Sonnet 5 (high effort)
+**Herramienta:** Claude Code, sesión nueva en `blog-ai`
+
+```
+Aplicar esta regla: Toda función nueva de un endpoint HTTP (handler/ruta o el método del controlador que atiende esa ruta) lleva como primera línea interna el comentario exacto // contract-ready (o # contract-ready en Python).
+```
+
+**Qué salió:** no añadió nada nuevo; dijo que `resumen_indice` ya cumplía. Lo lancé varias veces.
+
+## Prompt 4
+
+**Modelo:** Sonnet 5 (high effort)
+**Herramienta:** Claude Code, sesión en `blog-ai`
+
+```
+Añade un endpoint GET /ping-contrato que devuelva {"ok": true}.
+Luego, en el repositorio hermano ../blog-api, añade un GET /ping-contrato que lo consuma.
+No hace falta tests ni levantar servicios.
+```
+
+**Qué salió:** creó los handlers; el comentario seguía ahí porque la regla ya vivía en el árbol de `blog-ai`.

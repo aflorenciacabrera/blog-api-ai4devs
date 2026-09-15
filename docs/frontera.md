@@ -1,0 +1,2 @@
+Persistí la regla en blog-api/.cursor/rules/contract-ready.mdc y CLAUDE.md (alwaysApply), y el agente la cumplió en los handlers nuevos de /resumen-indice (// contract-ready y # contract-ready como primera línea interna).
+Al arrancar desde blog-ai la regla no se cayó porque el agente ya la había copiado a blog-ai/CLAUDE.md y blog-ai/.cursor/rules; lo comprobé en ping_contrato y pingContrato (el comentario estaba); lo que sí falló en silencio fue el primer prompt, que solo pedía aplicar la regla en el chat: la búsqueda de contract-ready dio cero y no se puso nada en rojo.
