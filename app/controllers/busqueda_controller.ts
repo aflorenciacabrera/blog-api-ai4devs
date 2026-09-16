@@ -47,4 +47,32 @@ export default class BusquedaController {
     const resultado = await this.ia.indexar(posts)
     return { datos: { enviados: posts.length, ...resultado } }
   }
+
+  /** Cuantos fragmentos hay indexados en blog-ai. Delega, no cuenta nada aqui. */
+  async resumenIndice({}: HttpContext) {
+    // contract-ready
+    const resumen = await this.ia.resumenIndice()
+    return { datos: resumen }
+  }
+
+  /** Ping de contrato: confirma que blog-ai responde. Delega, no hace nada mas. */
+  async pingContrato({}: HttpContext) {
+    // contract-ready
+    const respuesta = await this.ia.pingContrato()
+    return { datos: respuesta }
+  }
+
+  /** Eco de sesion: confirma que blog-ai responde. Delega, no hace nada mas. */
+  async ecoSesion({}: HttpContext) {
+    // contract-ready
+    const respuesta = await this.ia.ecoSesion()
+    return { datos: respuesta }
+  }
+
+  /** Latido: confirma que blog-ai responde. Delega, no hace nada mas. */
+  async latido({}: HttpContext) {
+    // contract-ready
+    const respuesta = await this.ia.latido()
+    return { datos: respuesta }
+  }
 }

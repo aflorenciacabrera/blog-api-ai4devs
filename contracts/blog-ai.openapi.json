@@ -244,6 +244,19 @@
         "title": "RespuestaIndexar",
         "type": "object"
       },
+      "RespuestaPing": {
+        "properties": {
+          "ok": {
+            "title": "Ok",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "ok"
+        ],
+        "title": "RespuestaPing",
+        "type": "object"
+      },
       "RespuestaPreguntar": {
         "properties": {
           "consulta": {
@@ -273,6 +286,19 @@
           "modelo"
         ],
         "title": "RespuestaPreguntar",
+        "type": "object"
+      },
+      "RespuestaResumenIndice": {
+        "properties": {
+          "fragmentos_indexados": {
+            "title": "Fragmentos Indexados",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "fragmentos_indexados"
+        ],
+        "title": "RespuestaResumenIndice",
         "type": "object"
       },
       "RespuestaSalud": {
@@ -436,6 +462,24 @@
         "summary": "Busqueda semantica"
       }
     },
+    "/eco-sesion": {
+      "get": {
+        "operationId": "eco_sesion_eco_sesion_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaPing"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Eco de sesion"
+      }
+    },
     "/indexar": {
       "post": {
         "description": "Los posts en borrador se omiten y se retiran del indice si ya estaban.",
@@ -475,6 +519,42 @@
         "summary": "Indexa posts publicados"
       }
     },
+    "/latido": {
+      "get": {
+        "operationId": "latido_latido_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaPing"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Latido del servicio"
+      }
+    },
+    "/ping-contrato": {
+      "get": {
+        "operationId": "ping_contrato_ping_contrato_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaPing"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Ping de contrato"
+      }
+    },
     "/preguntar": {
       "post": {
         "operationId": "preguntar_preguntar_post",
@@ -511,6 +591,24 @@
           }
         },
         "summary": "Pregunta al blog (RAG)"
+      }
+    },
+    "/resumen-indice": {
+      "get": {
+        "operationId": "resumen_indice_resumen_indice_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RespuestaResumenIndice"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Cuantos fragmentos hay indexados"
       }
     },
     "/salud": {

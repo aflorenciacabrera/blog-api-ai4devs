@@ -35,6 +35,8 @@ export type RespuestaIndexar = {
   omitidos: number
   motivos_omision: { slug: string; motivo: string }[]
 }
+export type RespuestaResumenIndice = { fragmentos_indexados: number }
+export type RespuestaPing = { ok: boolean }
 
 /**
  * Cliente del OTRO repositorio. Es el unico punto de este servicio que hace red,
@@ -94,6 +96,74 @@ export default class BlogAiService {
 
   async preguntar(consulta: string, limite: number): Promise<RespuestaPreguntar> {
     return this.pedir<RespuestaPreguntar>('/preguntar', { consulta, limite }, 'RespuestaPreguntar')
+  }
+
+  async resumenIndice(): Promise<RespuestaResumenIndice> {
+    let respuesta: Response
+    try {
+      respuesta = await fetch(`${this.base}/resumen-indice`, {
+        signal: AbortSignal.timeout(5_000),
+      })
+    } catch (error) {
+      throw new ServicioIaCaido(
+        `blog-ai no responde en ${this.base} (${(error as Error).message})`
+      )
+    }
+    if (!respuesta.ok) {
+      throw new ServicioIaCaido(`blog-ai devolvio ${respuesta.status} en /resumen-indice`)
+    }
+    return (await respuesta.json()) as RespuestaResumenIndice
+  }
+
+  async pingContrato(): Promise<RespuestaPing> {
+    let respuesta: Response
+    try {
+      respuesta = await fetch(`${this.base}/ping-contrato`, {
+        signal: AbortSignal.timeout(5_000),
+      })
+    } catch (error) {
+      throw new ServicioIaCaido(
+        `blog-ai no responde en ${this.base} (${(error as Error).message})`
+      )
+    }
+    if (!respuesta.ok) {
+      throw new ServicioIaCaido(`blog-ai devolvio ${respuesta.status} en /ping-contrato`)
+    }
+    return (await respuesta.json()) as RespuestaPing
+  }
+
+  async ecoSesion(): Promise<RespuestaPing> {
+    let respuesta: Response
+    try {
+      respuesta = await fetch(`${this.base}/eco-sesion`, {
+        signal: AbortSignal.timeout(5_000),
+      })
+    } catch (error) {
+      throw new ServicioIaCaido(
+        `blog-ai no responde en ${this.base} (${(error as Error).message})`
+      )
+    }
+    if (!respuesta.ok) {
+      throw new ServicioIaCaido(`blog-ai devolvio ${respuesta.status} en /eco-sesion`)
+    }
+    return (await respuesta.json()) as RespuestaPing
+  }
+
+  async latido(): Promise<RespuestaPing> {
+    let respuesta: Response
+    try {
+      respuesta = await fetch(`${this.base}/latido`, {
+        signal: AbortSignal.timeout(5_000),
+      })
+    } catch (error) {
+      throw new ServicioIaCaido(
+        `blog-ai no responde en ${this.base} (${(error as Error).message})`
+      )
+    }
+    if (!respuesta.ok) {
+      throw new ServicioIaCaido(`blog-ai devolvio ${respuesta.status} en /latido`)
+    }
+    return (await respuesta.json()) as RespuestaPing
   }
 
   async salud(): Promise<Record<string, unknown>> {
