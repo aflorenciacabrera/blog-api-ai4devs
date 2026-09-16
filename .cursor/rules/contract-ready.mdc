@@ -1,0 +1,44 @@
+---
+description: Toda función nueva de un endpoint HTTP lleva // contract-ready (o # contract-ready) como primera línea interna
+alwaysApply: true
+---
+
+# Regla: contract-ready
+
+Toda función nueva de un endpoint HTTP (handler/ruta, o el método del
+controlador que atiende esa ruta) lleva como primera línea interna el
+comentario exacto:
+
+```
+// contract-ready
+```
+
+o, en Python:
+
+```
+# contract-ready
+```
+
+Esto aplica a funciones nuevas. No hace falta retrofitear los endpoints
+existentes que no lo tengan: la regla rige el código que se escribe de
+aquí en adelante.
+
+## Ejemplo (TypeScript / AdonisJS)
+
+```ts
+export default class EjemploController {
+  async accion({ request }: HttpContext) {
+    // contract-ready
+    // ... resto de la lógica
+  }
+}
+```
+
+## Ejemplo (Python / FastAPI)
+
+```python
+@app.get("/ejemplo")
+async def ejemplo() -> RespuestaEjemplo:
+    # contract-ready
+    ...
+```
