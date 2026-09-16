@@ -29,7 +29,7 @@ Aplicar esta regla: Toda función nueva de un endpoint HTTP (handler/ruta o el m
 Aplicar esta regla: Toda función nueva de un endpoint HTTP (handler/ruta o el método del controlador que atiende esa ruta) lleva como primera línea interna el comentario exacto // contract-ready (o # contract-ready en Python).
 ```
 
-**Qué salió:** no añadió nada nuevo; dijo que `resumen_indice` ya cumplía. Lo lancé varias veces.
+**Qué salió:** no añadió nada nuevo; dijo que `resumen_indice` ya cumplía. Lo lanzé varias veces.
 
 ## Prompt 3
 
@@ -44,3 +44,28 @@ No hace falta tests ni levantar servicios.
 
 **Qué salió:** creó los handlers; el comentario seguía ahí porque la regla ya vivía en el árbol de `blog-ai`.
 
+## Prompt 4
+
+**Modelo:** Sonnet 5 (high effort)
+**Herramienta:** Claude Code, sesión nueva en `blog-ai` (sin `CLAUDE.md` ni `.cursor/rules` en ese repo)
+
+```
+Añade un endpoint GET /eco-sesion que devuelva {"ok": true}.
+Luego, en el repositorio hermano ../blog-api, añade un GET /eco-sesion que lo consuma.
+No hace falta tests ni levantar servicios.
+```
+
+**Qué salió:** creó `eco_sesion` y `ecoSesion` con `# contract-ready` y `// contract-ready`. La regla no estaba persistida en `blog-ai`; el comentario se copió del patrón de `ping_contrato` / `pingContrato`.
+
+## Prompt 5
+
+**Modelo:** Sonnet 5 (high effort)
+**Herramienta:** Claude Code, sesión nueva en `blog-ai` (sin la regla persistida y sin `# contract-ready` en los handlers vecinos)
+
+```
+Añade un endpoint GET /latido que devuelva {"ok": true}.
+Luego, en el repositorio hermano ../blog-api, añade un GET /latido que lo consuma.
+No hace falta tests ni levantar servicios.
+```
+
+**Qué salió:** `latido()` en `blog-ai` sin `# contract-ready`; `latido()` en `blog-api` con `// contract-ready`. Nada se puso en rojo.
